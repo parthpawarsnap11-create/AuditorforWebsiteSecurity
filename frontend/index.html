@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberSentinel — Defensive Web Security & Posture Auditor | Parth Pawar</title>
+  <meta name="description" content="Automated, non-intrusive web security posture evaluation, compliance auditing, and developer remediation for STCS225.">
+  <link rel="stylesheet" href="/static/styles/main.css">
+  <link rel="stylesheet" href="/static/styles/components.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Branding -->
+  <header class="app-header">
+    <div class="container header-content">
+      <div class="brand-wrapper">
+        <div class="brand-icon">🛡️</div>
+        <div>
+          <div class="brand-name">CYBERSENTINEL</div>
+          <div class="brand-subtitle">Defensive Web Security Auditor</div>
+        </div>
+      </div>
+
+      <div class="header-meta">
+        <div class="student-tag">
+          <span>👤 Parth Pawar</span>
+          <span style="opacity:0.6;">|</span>
+          <span>2024SEPVUGP0021</span>
+          <span style="opacity:0.6;">|</span>
+          <span>STCS225</span>
+        </div>
+        <div class="status-pill" id="api-status-pill">
+          <span class="status-dot"></span>
+          <span>Connecting...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Command Center -->
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span>⚡ Academic Cyber Security Assessment Platform</span>
+      </div>
+      <h1 class="hero-title">
+        Audit & Harden Your <span>Web Security Posture</span>.
+      </h1>
+      <p class="hero-description">
+        Non-intrusive, automated evaluation of Transport Layer Security, modern HTTP browser headers, cookie hygiene, attack surface exposure, CORS rules, and domain anti-spoofing defense.
+      </p>
+
+      <!-- Scanner Card -->
+      <div class="scanner-card">
+        <div class="input-group">
+          <select id="protocol-select" class="protocol-select">
+            <option value="https://">https://</option>
+            <option value="http://">http://</option>
+          </select>
+          <input 
+            type="text" 
+            id="target-url-input" 
+            class="url-input" 
+            placeholder="Enter target domain (e.g. 127.0.0.1:8000/mock/hardened or example.com)"
+            value="127.0.0.1:8000/mock/hardened"
+            onkeydown="if(event.key==='Enter') triggerAudit()"
+          />
+          <button id="scan-btn" class="btn-primary" onclick="triggerAudit()">
+            <span>🛡️</span> Run Defensive Audit
+          </button>
+        </div>
+
+        <!-- 1-Click Test Bench Presets -->
+        <div class="presets-container">
+          <span class="preset-label">Test Bench Presets:</span>
+          <button class="preset-chip hardened" onclick="selectPreset('hardened')">
+            <span>🟢</span> Mock Hardened (Grade A+)
+          </button>
+          <button class="preset-chip vulnerable" onclick="selectPreset('vulnerable')">
+            <span>🔴</span> Mock Vulnerable (Grade F)
+          </button>
+          <button class="preset-chip balanced" onclick="selectPreset('balanced')">
+            <span>🔵</span> Mock Balanced (Grade B)
+          </button>
+          <button class="preset-chip" onclick="selectPreset('custom')">
+            <span>🌐</span> Custom Domain
+          </button>
+        </div>
+
+        <div class="disclaimer-note">
+          <span>🔒</span> Complies with VSST Ethical Guidelines: Performs passive inspection only. No intrusive payloads, exploits, or DoS testing.
+        </div>
+      </div>
+
+      <!-- Progressive Scan Steps -->
+      <div id="scan-progress-bar" class="scan-progress-bar">
+        <div style="font-size:0.85rem; font-weight:700; color:var(--accent-cyan); text-align:left;">
+          Auditing Target Architecture & Defense Layers...
+        </div>
+        <div class="progress-steps">
+          <div class="step-item active">
+            <div class="step-dot"></div>
+            <span>1. Handshake</span>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <span>2. TLS/Cert</span>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <span>3. Security Headers</span>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <span>4. Cookie Hygiene</span>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <span>5. CORS & Surface</span>
+          </div>
+          <div class="step-item">
+            <div class="step-dot"></div>
+            <span>6. WSPI Score</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assessment Results Dashboard -->
+    <section id="results-section" class="results-section">
+      <div class="dashboard-grid">
+        <!-- SVG Radial Score Gauge Card -->
+        <div class="score-card">
+          <div class="gauge-container">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <circle class="gauge-bg" cx="80" cy="80" r="70"></circle>
+              <circle id="gauge-circle" class="gauge-fill" cx="80" cy="80" r="70" stroke-dasharray="440" stroke-dashoffset="440"></circle>
+            </svg>
+            <div class="gauge-text-group">
+              <div id="gauge-score-value" class="gauge-score">0</div>
+              <div class="gauge-max">/ 100 WSPI</div>
+            </div>
+          </div>
+          <div id="grade-badge" class="grade-badge a-plus">GRADE A+</div>
+          <div style="font-size:0.75rem; color:var(--text-muted); margin-top:8px;">Weighted Security Posture Index</div>
+        </div>
+
+        <!-- Target Posture & Metrics Card -->
+        <div class="posture-card">
+          <div>
+            <div class="posture-header">
+              <div>
+                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Evaluated Target</span>
+                <div id="res-target-url" class="target-badge" style="margin-top:4px;">https://...</div>
+              </div>
+              <div id="res-status-label" class="status-pill" style="font-size:0.82rem; padding:6px 14px;">
+                Hardened & Compliant
+              </div>
+            </div>
+            <p id="res-summary-text" style="font-size:0.92rem; color:var(--text-secondary); line-height:1.5;">
+              Target overview will appear here after evaluation.
+            </p>
+          </div>
+
+          <!-- Interactive Severity Filter Pills -->
+          <div class="metrics-row">
+            <div class="metric-pill critical" onclick="setFilter('critical-high', this)">
+              <div id="cnt-critical" class="metric-number" style="color:var(--accent-rose);">0</div>
+              <div class="metric-label">Critical</div>
+            </div>
+            <div class="metric-pill high" onclick="setFilter('critical-high', this)">
+              <div id="cnt-high" class="metric-number" style="color:#fb923c;">0</div>
+              <div class="metric-label">High</div>
+            </div>
+            <div class="metric-pill medium" onclick="setFilter('medium', this)">
+              <div id="cnt-medium" class="metric-number" style="color:var(--accent-amber);">0</div>
+              <div class="metric-label">Medium</div>
+            </div>
+            <div class="metric-pill low" onclick="setFilter('low', this)">
+              <div id="cnt-low" class="metric-number" style="color:var(--accent-blue);">0</div>
+              <div class="metric-label">Low</div>
+            </div>
+            <div class="metric-pill passed" onclick="setFilter('passed', this)">
+              <div id="cnt-passed" class="metric-number" style="color:var(--accent-emerald);">0</div>
+              <div class="metric-label">Passed</div>
+            </div>
+          </div>
+
+          <!-- Quick Action Bar -->
+          <div class="action-bar">
+            <button class="btn-primary" style="padding:0.65rem 1.25rem; font-size:0.85rem;" onclick="triggerReportModal()">
+              <span>📑</span> Generate Formal Report
+            </button>
+            <button class="btn-secondary" onclick="exportScanJson()">
+              <span>💾</span> Export JSON
+            </button>
+            <button class="btn-secondary" onclick="setFilter('all', null)">
+              <span>🔄</span> Reset Filter (Show All)
+            </button>
+            <div style="margin-left:auto; display:flex; align-items:center; gap:12px; font-size:0.75rem; color:var(--text-muted);">
+              <span>Server: <strong id="meta-server" style="color:#cbd5e1;">-</strong></span>
+              <span>Status: <strong id="meta-status-code" style="color:#cbd5e1;">-</strong></span>
+              <span>Time: <strong id="meta-duration" style="color:#cbd5e1;">-</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Findings Accordion -->
+      <div class="findings-container">
+        <div class="section-title-row">
+          <div class="section-title">Security Inspection Findings & Remediation</div>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Click any finding card to expand technical evidence and code snippets</span>
+        </div>
+        <div id="findings-list">
+          <!-- Dynamic Finding Cards will be injected here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical Audit Log -->
+    <section class="history-section">
+      <div class="section-title-row">
+        <div class="section-title">Audit History & Persistence (SQLite)</div>
+        <span style="font-size:0.8rem; color:var(--text-muted);">Persistent local scan records for trend comparison</span>
+      </div>
+      <div class="table-card">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Target URL</th>
+              <th>Time</th>
+              <th>Score</th>
+              <th>Grade</th>
+              <th>Findings Ratio</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- SQLite Scans dynamically populated here -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Formal Academic Report Modal -->
+  <div id="report-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-close-btn" onclick="closeReportModal()">✕</div>
+      <div id="report-modal-body">
+        <!-- Rendered Academic Report -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="container footer-content">
+      <div>
+        <strong style="color:#fff;">CyberSentinel Platform</strong> — Automated Defensive Web Security Posture Auditor
+        <div style="font-size:0.78rem; margin-top:4px;">
+          Developed by <strong>Parth Pawar</strong> (<code>2024SEPVUGP0021</code>) & <strong>Aryaman V Saboo</strong> (<code>2024SEPVUGP0039</code>) | VSST, Vijaybhoomi University
+        </div>
+      </div>
+      <div style="font-size:0.78rem; text-align:right;">
+        Course Code: <code>STCS225</code> (Foundation of Cyber Security)<br>
+        End-Term Examination Project &copy; 2026
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="/static/js/gauge.js"></script>
+  <script src="/static/js/report.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

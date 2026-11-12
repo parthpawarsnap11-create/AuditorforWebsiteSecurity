@@ -1,11 +1,4 @@
-# CyberSentinel: Advanced Defensive Web Security & Posture Auditor
 
-**Team:** Parth Pawar (`2024SEPVUGP0021`), Aryaman V Saboo (`2024SEPVUGP0039`)  
-**Course:** Foundation of Cyber Security (`STCS225`)  
-**Institution:** Vijaybhoomi School of Science & Technology (VSST), Vijaybhoomi University  
-**Term:** End-Term Examination, September 2026  
-
----
 
 ## 1. Overview
 **CyberSentinel** is an automated, non-intrusive web security posture evaluation engine. It assesses the defensive configuration of any authorized web target—including transport encryption, modern browser security headers, cookie hygiene, attack surface exposure, CORS policies, and domain email anti-spoofing safeguards—without deploying aggressive or offensive payloads.
